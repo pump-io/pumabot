@@ -12,5 +12,6 @@
   "hubot-tell",
   "hubot-sentimental",
   "hubot-business-cat",
-  "hubot-darts"
+  "hubot-darts",
+  "hubot-cron"
 ]

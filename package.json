@@ -11,7 +11,7 @@
     "hubot-darts": "^1.0.2",
     "hubot-diagnostics": "0.0.1",
     "hubot-github-compare": "^1.1.0",
-    "hubot-github-issue-find": "^0.1.1",
+    "hubot-github-issue-lookup": "^0.1.1",
     "hubot-github-repo-event-notifier": "^1.6.0",
     "hubot-google-images": "^0.2.5",
     "hubot-help": "^0.1.2",

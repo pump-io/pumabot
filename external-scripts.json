@@ -13,5 +13,7 @@
   "hubot-sentimental",
   "hubot-business-cat",
   "hubot-darts",
-  "hubot-cron"
+  "hubot-cron",
+  "hubot-github-compare",
+  "hubot-github-issue-find"
 ]

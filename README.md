@@ -50,9 +50,11 @@ easier way to do this has been implemented.
           $(find node_modules/{}/ -name "*.coffee")' | \
         awk -F '#' '{ printf "%-25s %s\n", $1, $2 }'
 
-How to set environment variables will be specific to your operating system.
-Rather than recreate the various methods and best practices in achieving this,
-it's suggested that you search for a dedicated guide focused on your OS.
+If you need to specify an environment variable, you can add it to
+`hubot.environment` and it will automatically be picked up in
+production. The only variable that's missing from that file, aside
+from operations-related values (and secrets), is
+`HUBOT_ANSWER_TO_THE_ULTIMATE_QUESTION_OF_LIFE_THE_UNIVERSE_AND_EVERYTHING`.
 
 ### Scripting
 

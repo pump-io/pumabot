@@ -3,6 +3,7 @@
 #
 # Commands:
 #   hubot start meeting - announces the meeting start and the beginning of logging, and starts roll call
+#   hubot meeting agenda - gives a reminder of the meeting agenda URL
 #   hubot end meeting - thanks participants for coming and announces the end of the log
 
 meetingPage = (date) ->

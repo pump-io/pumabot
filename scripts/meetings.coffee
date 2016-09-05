@@ -11,31 +11,32 @@ path = require 'path'
 cloneOrPull = require 'git-clone-or-pull'
 remark = require 'remark'
 mdastToString = require 'mdast-util-to-string'
-processor = remark().use(extractAgenda)
+processor = remark()
 
 agendaData = ''
 
-extractAgenda = (ast, file, next) ->
-	foundAgenda = false
-	agendaNodes = []
+extractAgenda = () ->
+	(ast, file, next) ->
+		foundAgenda = false
+		agendaNodes = []
 
-	return next()
+		for node in ast.children
+			if node.type is 'heading' and node.children[0].value is 'Agenda'
+				# Agenda-related nodes are starting
+				foundAgenda = true
+			else if node.type is 'heading'
+				# We've hit another heading, signaling the end of agenda-related nodes
+				foundAgenda = false
+			else if foundAgenda
+				# Agenda-related node
+				agendaNodes.push node
 
-	for node in ast.children
-		if node.type is 'heading' and node.children[0].value is 'Agenda'
-			# Agenda-related nodes are starting
-			foundAgenda = true
-		else if node.type is 'heading'
-			# We've hit another heading, signaling the end of agenda-related nodes
-			foundAgenda = false
-		else if foundAgenda
-			# Agenda-related node
-			agendaNodes.push node
+		for node in agendaNodes
+			agendaData += mdastToString node
 
-	for node in agendaNodes
-		agendaData += mdastToString node
+		next()
 
-	next()
+processor.use extractAgenda
 
 updateWiki = (callback) ->
 	cloneOrPull 'https://github.com/e14n/pump.io.wiki.git', '/var/lib/hubot-pumpio/pump.io.wiki', (err) ->

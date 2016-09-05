@@ -4,6 +4,7 @@
 # Commands:
 #   hubot start meeting - announces the meeting start and the beginning of logging, and starts roll call
 #   hubot meeting agenda - gives a reminder of the meeting agenda URL
+#   hubot reload agenda - reloads the agenda of the active meeting
 #   hubot end meeting - thanks participants for coming and announces the end of the log
 
 fs = require 'fs'
@@ -109,6 +110,14 @@ module.exports = (robot) ->
 			return
 
 		res.reply 'The agenda is at ' + currentMeeting.url + '#agenda.'
+
+	robot.respond /reload agenda/i, (res) ->
+		if not currentMeeting
+			res.reply 'There isn\'t a meeting right now, so there\'s no agenda to reload.'
+			return
+
+		currentMeeting.loadAgenda () ->
+			res.reply res.random ['cool, just did.', 'just did', 'done']
 
 	robot.respond /end meeting/i, (res) ->
 		if not currentMeeting

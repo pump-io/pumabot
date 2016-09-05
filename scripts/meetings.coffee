@@ -39,7 +39,7 @@ extractAgenda = () ->
 processor.use extractAgenda
 
 updateWiki = (callback) ->
-	cloneOrPull 'https://github.com/e14n/pump.io.wiki.git', '/var/lib/hubot-pumpio/pump.io.wiki', (err) ->
+	cloneOrPull 'https://github.com/e14n/pump.io.wiki.git', '/var/cache/hubot-pumpio/pump.io.wiki', (err) ->
 		callback err or null
 
 meetingLabel = (date) ->
@@ -48,21 +48,23 @@ meetingLabel = (date) ->
 	month = if month < 10 then '0' + month.toString() else month.toString()
 	day = date.getDate()
 	day = if day < 10 then '0' + day.toString() else day.toString()
-	str = year
+	str = 'Meeting-'
+	str += year
 	str += '-'
 	str += month
 	str += '-'
 	str += day
 
 meetingPage = (date) ->
-	'https://github.com/e14n/pump.io/wiki/Meeting-' + meetingLabel(date)
+	'https://github.com/e14n/pump.io/wiki/' + meetingLabel(date)
 
 meetingFile = (date) ->
-	path.join '/var/lib/hubot-pumpio/pump.io.wiki/', meetingLabel(date) + '.md'
+	path.join '/var/cache/hubot-pumpio/pump.io.wiki/', meetingLabel(date) + '.md'
 
 meetingAgenda = (date, callback) ->
 	fs.readFile meetingFile(date), (err, data) ->
 		if err then throw err
+
 		doc = processor.process(data)
 
 		callback null

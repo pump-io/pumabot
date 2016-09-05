@@ -5,6 +5,7 @@
 #   hubot start meeting - announces the meeting start and the beginning of logging, and starts roll call
 #   hubot meeting agenda - gives a reminder of the meeting agenda URL
 #   hubot reload agenda - reloads the agenda of the active meeting
+#   hubot current agenda item - prints the current agenda topic
 #   hubot next agenda item - changes the current topic to the next item on the agenda
 #   hubot previous agenda item - changes the current topic to the previous item on the agenda
 #   hubot end meeting - thanks participants for coming and announces the end of the log
@@ -18,6 +19,28 @@ processor = remark()
 
 agendaData = []
 currentMeeting = null
+
+formatAgendaItem = (item, depth=0) ->
+	if depth is 0
+		str = 'TOPIC: ' + item[0]
+		str += formatAgendaItem item[1], 1
+		return str
+
+	if typeof item is 'string'
+		str = '\n'
+		str += Array(depth - 1).join '  '
+		str += '* '
+		str += item
+		return str
+
+	str = ''
+	for i in item
+		if typeof i is 'string'
+			str += formatAgendaItem i, depth
+		else
+			str += formatAgendaItem i, (depth + 1)
+
+	return str
 
 handleListItem = (item) ->
 	for child in item.children
@@ -79,7 +102,6 @@ class Meeting
 		@loadAgenda callback
 
 	loadAgenda: (callback) ->
-		console.error @agenda
 		filename = @filename
 		updateWiki () =>
 			fs.readFile filename, (err, data) =>
@@ -125,7 +147,14 @@ module.exports = (robot) ->
 			return
 
 		currentMeeting.loadAgenda () ->
-			res.reply res.random ['cool, just did.', 'just did', 'done']
+			res.reply res.random ['just did', 'done', 'agenda reloaded.']
+
+	robot.respond /current agenda item/i, (res) ->
+		if not currentMeeting
+			res.reply 'There isn\'t a meeting right now, so there\'s no agenda.'
+			return
+
+		res.send formatAgendaItem(currentMeeting.agenda[currentMeeting.agendaTopic])
 
 	robot.respond /next agenda item/i, (res) ->
 		if not currentMeeting
@@ -137,7 +166,7 @@ module.exports = (robot) ->
 			return
 
 		currentMeeting.agendaTopic++
-		res.reply currentMeeting.agenda[currentMeeting.agendaTopic]
+		res.send formatAgendaItem(currentMeeting.agenda[currentMeeting.agendaTopic])
 
 	robot.respond /previous agenda item/i, (res) ->
 		if not currentMeeting
@@ -149,7 +178,7 @@ module.exports = (robot) ->
 			return
 
 		currentMeeting.agendaTopic--
-		res.reply currentMeeting.agenda[currentMeeting.agendaTopic]
+		res.sendm formatAgendaItem(currentMeeting.agenda[currentMeeting.agendaTopic])
 
 	robot.respond /end meeting/i, (res) ->
 		if not currentMeeting

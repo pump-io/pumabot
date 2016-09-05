@@ -2,7 +2,7 @@
 
 set -e
 
-if [ $(hostname) == steevie ]; then
+if [ $(hostname) = steevie ]; then
 	# Running in production
 	sudo npm install
 else

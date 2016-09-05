@@ -67,18 +67,21 @@ meetingLabel = (date) ->
 	str += '-'
 	str += day
 
-meetingAgenda = (filename, callback) ->
-	fs.readFile filename, (err, data) ->
-		if err then throw err
-
-		doc = processor.process(data)
-
-		callback null
-
 class Meeting
-	constructor: (@label) ->
+	constructor: (@label, callback) ->
 		@url = 'https://github.com/e14n/pump.io/wiki/' + @label
 		@filename = path.join '/var/cache/hubot-pumpio/pump.io.wiki/', @label + '.md'
+		@loadAgenda () ->
+			@agenda = agendaData
+			callback()
+
+	loadAgenda: (callback) ->
+		fs.readFile @filename, (err, data) ->
+			if err then throw err
+
+			doc = processor.process(data)
+
+			callback null
 
 module.exports = (robot) ->
 	updateWiki () ->
@@ -90,8 +93,7 @@ module.exports = (robot) ->
 			return
 
 		res.reply res.random ['just a sec', 'no problem', 'sure']
-		currentMeeting = new Meeting meetingLabel(new Date())
-		meetingAgenda currentMeeting.filename, () ->
+		currentMeeting = new Meeting meetingLabel(new Date()), () ->
 			# TODO: ping all
 			res.send '#############################################################'
 			res.send 'BEGIN LOG'

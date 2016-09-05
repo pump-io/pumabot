@@ -13,7 +13,14 @@ remark = require 'remark'
 mdastToString = require 'mdast-util-to-string'
 processor = remark()
 
-agendaData = ''
+agendaData = []
+
+handleListItem = (item) ->
+	for child in item.children
+		switch child.type
+			when 'paragraph' then mdastToString child
+			when 'list' then [handleListItem i for i in child.children]
+			else throw new Error('Weird agenda')
 
 extractAgenda = () ->
 	(ast, file, next) ->
@@ -32,7 +39,11 @@ extractAgenda = () ->
 				agendaNodes.push node
 
 		for node in agendaNodes
-			agendaData += mdastToString node
+			if node.type isnt 'list'
+				continue
+
+			for item in node.children
+				agendaData.push handleListItem(item)
 
 		next()
 

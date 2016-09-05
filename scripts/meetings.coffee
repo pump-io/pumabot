@@ -130,6 +130,10 @@ module.exports = (robot) ->
 			res.reply 'There isn\'t a meeting right now, so there\'s no agenda.'
 			return
 
+		if currentMeeting.agendaTopic is currentMeeting.agenda.length - 1
+			res.reply 'That\'s the last agenda item.'
+			return
+
 		currentMeeting.agendaTopic++
 		res.reply currentMeeting.agenda[currentMeeting.agendaTopic]
 

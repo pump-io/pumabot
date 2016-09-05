@@ -137,6 +137,18 @@ module.exports = (robot) ->
 		currentMeeting.agendaTopic++
 		res.reply currentMeeting.agenda[currentMeeting.agendaTopic]
 
+	robot.respond /previous agenda item/i, (res) ->
+		if not currentMeeting
+			res.reply 'There isn\'t a meeting right now, so there\'s no agenda.'
+			return
+
+		if currentMeeting.agendaTopic is 0
+			res.reply 'We\'re on the first agenda item.'
+			return
+
+		currentMeeting.agendaTopic--
+		res.reply currentMeeting.agenda[currentMeeting.agendaTopic]
+
 	robot.respond /end meeting/i, (res) ->
 		if not currentMeeting
 			res.reply 'There\'s no meeting to end.'

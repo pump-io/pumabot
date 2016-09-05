@@ -72,18 +72,22 @@ class Meeting
 	constructor: (@label, callback) ->
 		@url = 'https://github.com/e14n/pump.io/wiki/' + @label
 		@filename = path.join '/var/cache/hubot-pumpio/pump.io.wiki/', @label + '.md'
-		@loadAgenda () ->
-			@agenda = agendaData
-			callback()
+		@agenda = null
+		@agendaTopic = 0
+		@loadAgenda callback
 
 	loadAgenda: (callback) ->
-		updateWiki () ->
-			fs.readFile @filename, (err, data) ->
+		console.error @agenda
+		filename = @filename
+		updateWiki () =>
+			fs.readFile filename, (err, data) =>
 				if err then throw err
 
 				doc = processor.process(data)
 
-				callback null
+				@agenda = agendaData
+
+				callback()
 
 module.exports = (robot) ->
 	updateWiki () ->
@@ -96,6 +100,7 @@ module.exports = (robot) ->
 
 		res.reply res.random ['just a sec', 'no problem', 'sure']
 		currentMeeting = new Meeting meetingLabel(new Date()), () ->
+			robot.logger.info 'Started meeting: ' + currentMeeting.label
 			# TODO: ping all
 			res.send '#############################################################'
 			res.send 'BEGIN LOG'
@@ -119,6 +124,14 @@ module.exports = (robot) ->
 
 		currentMeeting.loadAgenda () ->
 			res.reply res.random ['cool, just did.', 'just did', 'done']
+
+	robot.respond /next agenda item/i, (res) ->
+		if not currentMeeting
+			res.reply 'There isn\'t a meeting right now, so there\'s no agenda.'
+			return
+
+		currentMeeting.agendaTopic++
+		res.reply currentMeeting.agenda[currentMeeting.agendaTopic]
 
 	robot.respond /end meeting/i, (res) ->
 		if not currentMeeting

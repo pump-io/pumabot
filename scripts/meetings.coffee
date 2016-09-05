@@ -5,6 +5,8 @@
 #   hubot start meeting - announces the meeting start and the beginning of logging, and starts roll call
 #   hubot meeting agenda - gives a reminder of the meeting agenda URL
 #   hubot reload agenda - reloads the agenda of the active meeting
+#   hubot next agenda item - changes the current topic to the next item on the agenda
+#   hubot previous agenda item - changes the current topic to the previous item on the agenda
 #   hubot end meeting - thanks participants for coming and announces the end of the log
 
 fs = require 'fs'

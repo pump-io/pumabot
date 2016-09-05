@@ -46,6 +46,7 @@ meetingLabel = (date) ->
 	month = date.getMonth() + 1
 	month = if month < 10 then '0' + month.toString() else month.toString()
 	day = date.getDate()
+	day = if day < 10 then '0' + day.toString() else day.toString()
 	str = year
 	str += '-'
 	str += month

@@ -77,12 +77,13 @@ class Meeting
 			callback()
 
 	loadAgenda: (callback) ->
-		fs.readFile @filename, (err, data) ->
-			if err then throw err
+		updateWiki () ->
+			fs.readFile @filename, (err, data) ->
+				if err then throw err
 
-			doc = processor.process(data)
+				doc = processor.process(data)
 
-			callback null
+				callback null
 
 module.exports = (robot) ->
 	updateWiki () ->

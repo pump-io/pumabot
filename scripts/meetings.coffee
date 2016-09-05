@@ -14,6 +14,7 @@ mdastToString = require 'mdast-util-to-string'
 processor = remark()
 
 agendaData = []
+currentMeeting = null
 
 handleListItem = (item) ->
 	for child in item.children
@@ -66,42 +67,55 @@ meetingLabel = (date) ->
 	str += '-'
 	str += day
 
-meetingPage = (date) ->
-	'https://github.com/e14n/pump.io/wiki/' + meetingLabel(date)
-
-meetingFile = (date) ->
-	path.join '/var/cache/hubot-pumpio/pump.io.wiki/', meetingLabel(date) + '.md'
-
-meetingAgenda = (date, callback) ->
-	fs.readFile meetingFile(date), (err, data) ->
+meetingAgenda = (filename, callback) ->
+	fs.readFile filename, (err, data) ->
 		if err then throw err
 
 		doc = processor.process(data)
 
 		callback null
 
+class Meeting
+	constructor: (@label) ->
+		@url = 'https://github.com/e14n/pump.io/wiki/' + @label
+		@filename = path.join '/var/cache/hubot-pumpio/pump.io.wiki/', @label + '.md'
+
 module.exports = (robot) ->
 	updateWiki () ->
 		# Do nothing
 
 	robot.respond /start meeting/i, (res) ->
+		if currentMeeting
+			res.reply 'There\'s already a meeting in progress.'
+			return
+
 		res.reply res.random ['just a sec', 'no problem', 'sure']
-		meetingAgenda new Date(), () ->
+		currentMeeting = new Meeting meetingLabel(new Date())
+		meetingAgenda currentMeeting.filename, () ->
 			# TODO: ping all
 			res.send '#############################################################'
 			res.send 'BEGIN LOG'
 			res.send '#############################################################'
 			res.send 'Welcome to this month\'s Pump.io community meeting! Everyone is welcome to participate.'
-			res.send 'This meeting is being logged and it will be posted on the wiki at ' + meetingPage(new Date()) + '. If you would like your nick redacted, please say so, either now or after the meeting.'
+			res.send 'This meeting is being logged and it will be posted on the wiki at ' + currentMeeting.url + '. If you would like your nick redacted, please say so, either now or after the meeting.'
 			res.send 'Let\'s start with roll call - who\'s here?'
 			res.emote 'is here'
 
 	robot.respond /meeting agenda/i, (res) ->
-		res.reply 'The agenda is at ' + meetingPage(new Date()) + '#agenda.'
+		if not currentMeeting
+			res.reply 'There isn\'t currently a meeting going on.'
+			return
+
+		res.reply 'The agenda is at ' + currentMeeting.url + '#agenda.'
 
 	robot.respond /end meeting/i, (res) ->
-		res.send 'Thank you all for attending! Logs will be posted on the wiki shortly at ' + meetingPage(new Date()) + '.'
+		if not currentMeeting
+			res.reply 'There\'s no meeting to end.'
+			return
+
+		res.send 'Thank you all for attending! Logs will be posted on the wiki shortly at ' + currentMeeting.url + '.'
 		res.send 'See you next month!'
 		res.send '#############################################################'
 		res.send 'END LOG'
 		res.send '#############################################################'
+		currentMeeting = null

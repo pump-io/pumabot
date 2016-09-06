@@ -33,6 +33,7 @@ formatAgendaItem = (item, depth=0) ->
 		str += item
 		return str
 
+	# item is an array
 	str = ''
 	for i in item
 		if typeof i is 'string'
@@ -48,8 +49,7 @@ handleListItem = (item) ->
 		switch child.type
 			when 'paragraph' then results.push mdastToString(child)
 			when 'list'
-				for i in child.children
-					results = results.concat handleListItem i
+				results.push [handleListItem(listItem) for listItem in child.children]
 			else throw new Error('Weird agenda')
 
 	results
@@ -76,10 +76,7 @@ extractAgenda = () ->
 
 			for item in node.children
 				data = handleListItem(item)
-				if typeof data is 'string'
-					agendaData.push data
-				else if typeof data is 'array'
-					agendaData = agendaData.concat data
+				agendaData.push data
 
 		next()
 
@@ -117,7 +114,6 @@ class Meeting
 				if err then throw err
 
 				doc = processor.process(data)
-
 				@agenda = agendaData
 
 				callback()

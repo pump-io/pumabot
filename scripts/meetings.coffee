@@ -187,7 +187,7 @@ module.exports = (robot) ->
 			return
 
 		currentMeeting.agendaTopic--
-		res.sendm formatAgendaItem(currentMeeting.agenda[currentMeeting.agendaTopic])
+		res.send formatAgendaItem(currentMeeting.agenda[currentMeeting.agendaTopic])
 
 	robot.respond /end meeting/i, (res) ->
 		if not currentMeeting

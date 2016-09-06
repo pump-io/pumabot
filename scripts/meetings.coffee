@@ -109,6 +109,7 @@ class Meeting
 
 	loadAgenda: (callback) ->
 		filename = @filename
+		@agenda = null
 		updateWiki () =>
 			fs.readFile filename, (err, data) =>
 				if err then throw err

@@ -159,11 +159,19 @@ module.exports = (robot) ->
 			res.reply 'There isn\'t a meeting right now, so there\'s no agenda.'
 			return
 
+		if currentMeeting.agenda is null
+			res.reply 'I\m still loading data! Please be patient.'
+			return
+
 		res.send formatAgendaItem(currentMeeting.agenda[currentMeeting.agendaTopic])
 
 	robot.respond /next agenda item/i, (res) ->
 		if not currentMeeting
 			res.reply 'There isn\'t a meeting right now, so there\'s no agenda.'
+			return
+
+		if currentMeeting.agenda is null
+			res.reply 'I\m still loading data! Please be patient.'
 			return
 
 		if currentMeeting.agendaTopic is currentMeeting.agenda.length - 1
@@ -176,6 +184,10 @@ module.exports = (robot) ->
 	robot.respond /previous agenda item/i, (res) ->
 		if not currentMeeting
 			res.reply 'There isn\'t a meeting right now, so there\'s no agenda.'
+			return
+
+		if currentMeeting.agenda is null
+			res.reply 'I\m still loading data! Please be patient.'
 			return
 
 		if currentMeeting.agendaTopic is 0

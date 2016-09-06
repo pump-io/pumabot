@@ -43,11 +43,16 @@ formatAgendaItem = (item, depth=0) ->
 	return str
 
 handleListItem = (item) ->
+	results = []
 	for child in item.children
 		switch child.type
-			when 'paragraph' then mdastToString child
-			when 'list' then [handleListItem i for i in child.children]
+			when 'paragraph' then results.push mdastToString(child)
+			when 'list'
+				for i in child.children
+					results = results.concat handleListItem i
 			else throw new Error('Weird agenda')
+
+	results
 
 extractAgenda = () ->
 	(ast, file, next) ->
@@ -70,7 +75,11 @@ extractAgenda = () ->
 				continue
 
 			for item in node.children
-				agendaData.push handleListItem(item)
+				data = handleListItem(item)
+				if typeof data is 'string'
+					agendaData.push data
+				else if typeof data is 'array'
+					agendaData = agendaData.concat data
 
 		next()
 

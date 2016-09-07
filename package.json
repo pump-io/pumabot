@@ -25,6 +25,7 @@
     "hubot-shipit": "^0.2.0",
     "hubot-tell": "^1.2.4",
     "hubot-thank-you": "0.0.3",
+    "lodash": "^4.15.0",
     "mdast-util-to-string": "^1.0.2",
     "remark": "^6.0.1"
   },

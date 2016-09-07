@@ -12,6 +12,7 @@
 
 fs = require 'fs'
 path = require 'path'
+_ = require 'lodash'
 cloneOrPull = require 'git-clone-or-pull'
 remark = require 'remark'
 mdastToString = require 'mdast-util-to-string'
@@ -23,7 +24,8 @@ currentMeeting = null
 formatAgendaItem = (item, depth=0) ->
 	if depth is 0
 		str = 'TOPIC: ' + item[0]
-		str += formatAgendaItem item[1], 1
+		for i in item.slice 1 # Slice the first item out, as it was just printed
+			str += formatAgendaItem i, (depth + 1)
 		return str
 
 	if typeof item is 'string'
@@ -32,26 +34,31 @@ formatAgendaItem = (item, depth=0) ->
 		str += '* '
 		str += item
 		return str
-
-	# item is an array
-	str = ''
-	for i in item
-		if typeof i is 'string'
-			str += formatAgendaItem i, depth
-		else
+	else if _.isArray item
+		# Sublist
+		str = ''
+		for i in item
 			str += formatAgendaItem i, (depth + 1)
+	else
+		throw new Error 'Agenda data is totally screwed'
 
 	return str
 
 handleListItem = (item) ->
+	# Returns an array of objects representing list items
+	# Objects are either arrays representing (sub)lists or strings
+
 	results = []
 	for child in item.children
 		switch child.type
+			# If it's a paragraph, i.e. just text, we return the string
 			when 'paragraph' then results.push mdastToString(child)
+			# If it's a sublist, we return an array representing the sublist,
+			# which is computed by a recursive call to handleListItem().
 			when 'list'
-				results.push [handleListItem(listItem) for listItem in child.children]
+				for sublistItem in child.children
+					results.push handleListItem(sublistItem)
 			else throw new Error('Weird agenda')
-
 	results
 
 extractAgenda = () ->
@@ -74,9 +81,8 @@ extractAgenda = () ->
 			if node.type isnt 'list'
 				continue
 
-			for item in node.children
-				data = handleListItem(item)
-				agendaData.push data
+			for listItem in node.children
+				agendaData.push handleListItem(listItem)
 
 		next()
 

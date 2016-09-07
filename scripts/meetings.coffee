@@ -109,21 +109,44 @@ class Meeting
 	constructor: (@label, callback) ->
 		@url = 'https://github.com/e14n/pump.io/wiki/' + @label
 		@filename = path.join '/var/cache/hubot-pumpio/pump.io.wiki/', @label + '.md'
-		@agenda = null
+		# undefined = not loaded, null = not available
+		@agenda = undefined
 		@agendaTopic = 0
 		@loadAgenda callback
 
 	loadAgenda: (callback) ->
 		filename = @filename
-		@agenda = null
-		updateWiki () =>
+		@agenda = undefined
+		updateWiki (err) =>
+			if err
+				@agenda = null
+				callback err
+				return
 			fs.readFile filename, (err, data) =>
-				if err then throw err
+				if err
+					@agenda = null
+					callback err
+					return
 
 				doc = processor.process(data)
 				@agenda = agendaData
 
 				callback()
+
+agendaSanityCheck = (res) ->
+	if not currentMeeting
+		res.reply 'there isn\'t a meeting right now, so there\'s no agenda.'
+		return false
+
+	if currentMeeting.agenda is null
+		res.reply 'sorry! For some reason, I don\'t have agenda data for this meeting.'
+		return false
+
+	if currentMeeting.agenda is undefined
+		res.reply 'I\'m still loading data! Please be patient.'
+		return false
+
+	return true
 
 module.exports = (robot) ->
 	updateWiki () ->
@@ -135,8 +158,11 @@ module.exports = (robot) ->
 			return
 
 		res.reply res.random ['just a sec', 'no problem', 'sure']
-		currentMeeting = new Meeting meetingLabel(new Date()), () ->
+		currentMeeting = new Meeting meetingLabel(new Date()), (err) ->
 			robot.logger.info 'Started meeting: ' + currentMeeting.label
+
+			if err then res.send 'I seem to have run into some trouble loading the agenda, so I won\'t be able to help you out during the meeting.'
+
 			# TODO: ping all
 			res.send '#############################################################'
 			res.send 'BEGIN LOG'
@@ -158,28 +184,20 @@ module.exports = (robot) ->
 			res.reply 'there isn\'t a meeting right now, so there\'s no agenda to reload.'
 			return
 
-		currentMeeting.loadAgenda () ->
+		currentMeeting.loadAgenda (err) ->
+			if err
+				res.reply 'I got an error, sorry'
+				return
+
 			res.reply res.random ['just did', 'done', 'agenda reloaded.']
 
 	robot.respond /current agenda item/i, (res) ->
-		if not currentMeeting
-			res.reply 'there isn\'t a meeting right now, so there\'s no agenda.'
-			return
-
-		if currentMeeting.agenda is null
-			res.reply 'I\m still loading data! Please be patient.'
-			return
+		if not agendaSanityCheck res then return
 
 		res.send formatAgendaItem(currentMeeting.agenda[currentMeeting.agendaTopic])
 
 	robot.respond /next agenda item/i, (res) ->
-		if not currentMeeting
-			res.reply 'there isn\'t a meeting right now, so there\'s no agenda.'
-			return
-
-		if currentMeeting.agenda is null
-			res.reply 'I\m still loading data! Please be patient.'
-			return
+		if not agendaSanityCheck res then return
 
 		if currentMeeting.agendaTopic is currentMeeting.agenda.length - 1
 			res.reply 'that\'s the last agenda item.'
@@ -189,13 +207,7 @@ module.exports = (robot) ->
 		res.send formatAgendaItem(currentMeeting.agenda[currentMeeting.agendaTopic])
 
 	robot.respond /previous agenda item/i, (res) ->
-		if not currentMeeting
-			res.reply 'there isn\'t a meeting right now, so there\'s no agenda.'
-			return
-
-		if currentMeeting.agenda is null
-			res.reply 'I\m still loading data! Please be patient.'
-			return
+		if not agendaSanityCheck res then return
 
 		if currentMeeting.agendaTopic is 0
 			res.reply 'we\'re on the first agenda item.'

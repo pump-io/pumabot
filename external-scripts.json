@@ -14,5 +14,6 @@
   "hubot-darts",
   "hubot-cron",
   "hubot-github-compare",
-  "hubot-github-issue-lookup"
+  "hubot-github-issue-lookup",
+  "hubot-bridge"
 ]

@@ -4,6 +4,8 @@
 # Commands:
 #   hubot start meeting - announces the meeting start and the beginning of logging, and starts roll call
 #   hubot meeting agenda - gives a reminder of the meeting agenda URL
+#   hubot who's chairing? - says who is chairing the current meeting
+#   hubot <nick> is chairing - sets a new chair for the current meeting
 #   hubot reload agenda - reloads the agenda of the active meeting
 #   hubot current agenda item - prints the current agenda topic
 #   hubot next agenda item - changes the current topic to the next item on the agenda
@@ -30,7 +32,7 @@ formatAgendaItem = (item, depth=0) ->
 
 	if typeof item is 'string'
 		str = '\n'
-		str += Array(depth - 1).join '  '
+		str += Array(depth - 1).join '	'
 		str += '* '
 		str += item
 		return str
@@ -106,7 +108,7 @@ meetingLabel = (date) ->
 	str += day
 
 class Meeting
-	constructor: (@label, callback) ->
+	constructor: (@label, @chair, callback) ->
 		@url = 'https://github.com/e14n/pump.io/wiki/' + @label
 		@filename = path.join '/var/cache/hubot-pumpio/pump.io.wiki/', @label + '.md'
 		# undefined = not loaded, null = not available
@@ -158,7 +160,9 @@ module.exports = (robot) ->
 			return
 
 		res.reply res.random ['just a sec', 'no problem', 'sure']
-		currentMeeting = new Meeting meetingLabel(new Date()), (err) ->
+		res.reply 'I assume you\'re chairing the meeting?'
+		res.send 'If not, tell me who is with  \'<nick> is chairing\''
+		currentMeeting = new Meeting meetingLabel(new Date()), res.message.user.name, (err) ->
 			robot.logger.info 'Started meeting: ' + currentMeeting.label
 
 			if err then res.send 'I seem to have run into some trouble loading the agenda, so I won\'t be able to help you out during the meeting.'
@@ -171,6 +175,21 @@ module.exports = (robot) ->
 			res.send 'This meeting is being logged and it will be posted on the wiki at ' + currentMeeting.url + '. If you would like your nick redacted, please say so, either now or after the meeting.'
 			res.send 'Let\'s start with roll call - who\'s here?'
 			res.emote 'is here'
+
+	robot.respond /who's chairing\?/i, (res) ->
+		if not currentMeeting
+			res.reply 'there isn\'t currently a meeting going on.'
+			return
+
+		res.reply currentMeeting.chair + ' is chairing this meeting.'
+
+	robot.respond /(.*) is(:? now)? chairing(:? this meeting)?/i, (res) ->
+		if not currentMeeting
+			res.reply 'there isn\'t currently a meeting going on.'
+			return
+
+		currentMeeting.chair = res.match[1]
+		res.reply 'ok, ' + currentMeeting.chair + ' is now chairing this meeting.'
 
 	robot.respond /meeting agenda/i, (res) ->
 		if not currentMeeting
@@ -222,6 +241,7 @@ module.exports = (robot) ->
 			return
 
 		res.send 'Thank you all for attending! Logs will be posted on the wiki shortly at ' + currentMeeting.url + '.'
+		res.send 'Also, special thanks to ' + currentMeeting.chair + ' for chairing!'
 		res.send 'See you next month!'
 		res.send '#############################################################'
 		res.send 'END LOG'

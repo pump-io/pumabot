@@ -1,4 +1,4 @@
-HUBOT_GITHUB_EVENT_NOTIFIER_TYPES=issues,page_build,pull_request,release
+HUBOT_GITHUB_EVENT_NOTIFIER_TYPES=issues:open,issues:close,page_build,pull_request,release
 HUBOT_TELL_RELATIVE_TIME=
 HUBOT_SENTIMENTAL_QUIET=
 HUBOT_GITHUB_USER=e14n

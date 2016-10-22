@@ -151,8 +151,9 @@ agendaSanityCheck = (res) ->
 	return true
 
 module.exports = (robot) ->
-	updateWiki () ->
-		# Do nothing
+	updateWiki (err) ->
+		if err then throw err
+		# Do nothing on success
 
 	robot.respond /start meeting/i, (res) ->
 		if currentMeeting

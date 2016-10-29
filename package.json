@@ -24,8 +24,10 @@
     "hubot-scripts": "^2.16.2",
     "hubot-sentimental": "^1.0.7",
     "hubot-shipit": "^0.2.0",
+    "hubot-suggest": "0.0.1",
     "hubot-tell": "^1.2.4",
     "hubot-thank-you": "0.0.3",
+    "hubot-url-describer": "^0.1.1",
     "lodash": "^4.15.0",
     "mdast-util-to-string": "^1.0.2",
     "remark": "^6.0.1"

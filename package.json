@@ -24,7 +24,7 @@
     "hubot-scripts": "^2.16.2",
     "hubot-sentimental": "^1.0.7",
     "hubot-shipit": "^0.2.0",
-    "hubot-suggest": "0.0.1",
+    "hubot-suggest": "0.0.2",
     "hubot-tell": "^1.2.4",
     "hubot-thank-you": "0.0.3",
     "hubot-url-describer": "github:strugee/hubot-url-describer#ignore-users",

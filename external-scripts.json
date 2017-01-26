@@ -17,5 +17,6 @@
   "hubot-github-issue-lookup",
   "hubot-bridge",
   "hubot-suggest",
-  "hubot-url-describer"
+  "hubot-url-describer",
+  "hubot-seen"
 ]

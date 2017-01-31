@@ -7,4 +7,4 @@
 module.exports = (robot) ->
 
   robot.respond /(?:where's|where is) the source\??/i, (res) ->
-    res.reply "https://github.com/strugee/hubot-pumpio"
+    res.reply "https://github.com/pump-io/hubot-pumpio"

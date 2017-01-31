@@ -13,6 +13,7 @@ module.exports = (robot) ->
 #  robot.hear /badger/i, (res) ->
 #    res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
   
+  # TODO: merge this with the sudo variant
   robot.respond /open the (.*) doors/i, (res) ->
     doorType = res.match[1]
     if doorType is "pod bay"
@@ -20,6 +21,10 @@ module.exports = (robot) ->
     else
       res.reply "Opening #{doorType} doors"
   
+  robot.respond /sudo open the (.*) doors/i, (res) ->
+    doorType = res.match[1]
+    res.reply "Opening #{doorType} doors"
+
   robot.hear /I like pie/i, (res) ->
     res.emote "makes a freshly baked pie"
   

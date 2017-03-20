@@ -15,7 +15,7 @@
     "hubot-github-issue-lookup": "^1.0.0",
     "hubot-github-repo-event-notifier": "^1.6.0",
     "hubot-google-images": "^0.2.5",
-    "hubot-help": "^0.1.2",
+    "hubot-help": "^0.2.0",
     "hubot-irc": "^0.2.8",
     "hubot-plusplus": "^1.2.0",
     "hubot-pugme": "^0.1.0",
@@ -25,13 +25,13 @@
     "hubot-seen": "^1.0.0",
     "hubot-sentimental": "^1.0.7",
     "hubot-shipit": "^0.2.0",
-    "hubot-suggest": "0.0.2",
+    "hubot-suggest": "1.0.0",
     "hubot-tell": "^1.2.4",
     "hubot-thank-you": "0.0.3",
     "hubot-url-describer": "github:strugee/hubot-url-describer#ignore-users",
     "lodash": "^4.15.0",
     "mdast-util-to-string": "^1.0.2",
-    "remark": "^6.0.1"
+    "remark": "^7.0.0"
   },
   "engines": {
     "node": "0.10.x"

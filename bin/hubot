@@ -2,14 +2,6 @@
 
 set -e
 
-if [ $(hostname) = steevie ]; then
-	# Running in production
-	sudo npm install
-else
-	# Running in dev environment
-	npm install
-fi
-
 export PATH="node_modules/.bin:node_modules/hubot/node_modules/.bin:$PATH"
 
 exec node_modules/.bin/hubot --name "pumabot" "$@"

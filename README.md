@@ -25,6 +25,7 @@ pumabot has a number of useful abilities. It can:
 * Look up issue titles when they're mentioned (`#1337`)
 * Say the title of the page when someone mentions an arbitrary URL (`http://example.com`)
 * Tell you where its source code lives (`pumabot: where's the source?`)
+* Tell you when someone was last seen (`pumabot: help seen`)
 
 It can also:
 

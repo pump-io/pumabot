@@ -12,7 +12,7 @@ You can find pumabot hanging out in `#pump.io` on Freenode.
 [generator-hubot]: https://github.com/github/generator-hubot
 [AJ]: https://strugee.net
 
-### Features
+## Features
 
 pumabot has a number of useful abilities. It can:
 
@@ -43,3 +43,19 @@ You might also try saying:
 * `pumabot: have some soda` (`pumabot: sleep it off`)
 
 pumabot also understands how to take commands over the XMPP bridge.
+
+## Development
+
+See [HACKING.md][]
+
+[HACKING.md]: HACKING.md
+
+## Deployment
+
+See [DEPLOYMENT.md][]
+
+[DEPLOYMENT.md]: DEPLOYMENT.md
+
+## Maintainer
+
+AJ Jordan <alex@strugee.net>

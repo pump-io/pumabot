@@ -17,5 +17,6 @@
   "hubot-bridge",
   "hubot-suggest",
   "hubot-url-describer",
-  "hubot-seen"
+  "hubot-seen",
+  "hubot-source"
 ]

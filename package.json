@@ -24,6 +24,7 @@
     "hubot-seen": "^1.0.0",
     "hubot-sentimental": "^1.0.7",
     "hubot-shipit": "^0.2.0",
+    "hubot-source": "^1.0.0",
     "hubot-suggest": "^1.0.0",
     "hubot-tell": "^1.2.4",
     "hubot-thank-you": "0.0.3",

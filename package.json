@@ -5,6 +5,7 @@
   "author": "Alex Jordan <alex@strugee.net>",
   "description": "A simple helpful robot for the Pumpiverse",
   "dependencies": {
+    "concat-stream": "^1.6.0",
     "git-clone-or-pull": "^2.0.0",
     "hubot": "^2.17.0",
     "hubot-botsnack": "1.0.0",
@@ -32,7 +33,8 @@
     "hubot-url-describer": "github:strugee/hubot-url-describer#ignore-users",
     "lodash": "^4.15.0",
     "mdast-util-to-string": "^1.0.2",
-    "remark": "^6.0.1"
+    "remark": "^6.0.1",
+    "travisci-webhook-handler": "^2.0.0"
   },
   "engines": {
     "node": "0.10.x"

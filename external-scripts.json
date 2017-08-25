@@ -18,5 +18,6 @@
   "hubot-suggest",
   "hubot-url-describer",
   "hubot-seen",
-  "hubot-source"
+  "hubot-source",
+  "hubot-botsnack"
 ]

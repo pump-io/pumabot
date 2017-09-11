@@ -5,7 +5,7 @@ verifyTravis = require 'travisci-webhook-handler'
 http = require 'https'
 concat = require 'concat-stream'
 
-room = '#pump.io
+room = '#pump.io'
 
 module.exports = (robot) ->
 

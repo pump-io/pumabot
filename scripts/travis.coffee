@@ -31,6 +31,8 @@ module.exports = (robot) ->
     }
 
     handler.on 'success', (_event) ->
+      if event.committer_name is 'greenkeeper[bot]' then return
+
       event = _event.payload
       buildName = "#{event.repository.owner_name}/#{event.repository.name}##{event.number}"
       buildInfo = "#{event.branch} - #{event.commit.slice 0, 7} : #{event.committer_name}"

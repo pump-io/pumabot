@@ -2,7 +2,7 @@
   "name": "pumabot",
   "version": "0.0.0",
   "private": true,
-  "author": "Alex Jordan <alex@strugee.net>",
+  "author": "AJ Jordan <alex@strugee.net>",
   "description": "A simple helpful robot for the Pumpiverse",
   "dependencies": {
     "concat-stream": "^1.6.0",

@@ -91,7 +91,7 @@ extractAgenda = () ->
 processor.use extractAgenda
 
 updateWiki = (callback) ->
-	cloneOrPull 'https://github.com/e14n/pump.io.wiki.git', '/var/cache/hubot-pumpio/pump.io.wiki', (err) ->
+	cloneOrPull 'https://github.com/pump-io/pump.io.wiki.git', '/var/cache/hubot-pumpio/pump.io.wiki', (err) ->
 		callback err or null
 
 meetingLabel = (date) ->
@@ -109,7 +109,7 @@ meetingLabel = (date) ->
 
 class Meeting
 	constructor: (@label, @chair, callback) ->
-		@url = 'https://github.com/e14n/pump.io/wiki/' + @label
+		@url = 'https://github.com/pump-io/pump.io/wiki/' + @label
 		@filename = path.join '/var/cache/hubot-pumpio/pump.io.wiki/', @label + '.md'
 		# undefined = not loaded, null = not available
 		@agenda = undefined

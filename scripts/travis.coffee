@@ -59,6 +59,7 @@ module.exports = (robot) ->
         else return
 
       robot.messageRoom room, "#{buildName} (#{buildInfo}): The build #{status}."
+      robot.messageRoom room, "Build URL: #{event.build_url}"
 
     handler.on 'error', (err) ->
       robot.logger.error "Travis CI error occurred: #{err.message}"

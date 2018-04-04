@@ -17,9 +17,6 @@ module.exports = (robot) ->
     robot.messageRoom room, 'Coudln\'t get Travis CI public key.'
 
   sink = concat (buf) ->
-    # Throw the response on disk so we can debug
-    # This is synchronous but I'll rip out this code soon anyway so I don't care.
-    fs.writeFile(fs.mkdtempSync('/tmp/') + '/webhook.json', buf, {mode: 0o700})
     body = JSON.parse buf.toString()
     key = body.config.notifications.webhook.public_key
 
@@ -35,6 +32,9 @@ module.exports = (robot) ->
     }
 
     handler.on 'success', (_event) ->
+      # Throw the response on disk so we can debug
+      # This is synchronous but I'll rip out this code soon anyway so I don't care.
+      fs.writeFile(fs.mkdtempSync('/tmp/') + '/webhook-success.json', JSON.stringify(_event), {mode: 0o700})
       if event.committer_name is 'greenkeeper[bot]' then return
 
       event = _event.payload
@@ -44,6 +44,9 @@ module.exports = (robot) ->
       robot.messageRoom room, "#{buildName} (#{buildInfo}): The build passed."
 
     handler.on 'failure', (_event) ->
+      # Throw the response on disk so we can debug
+      # This is synchronous but I'll rip out this code soon anyway so I don't care.
+      fs.writeFile(fs.mkdtempSync('/tmp/') + '/webhook-failure.json', JSON.stringify(_event), {mode: 0o700})
       event = _event.payload
       buildName = "#{event.repository.owner_name}/#{event.repository.name}##{event.number}"
       buildInfo = "#{event.branch} - #{event.commit.slice 0, 7} : #{event.committer_name}"

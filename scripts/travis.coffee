@@ -39,7 +39,11 @@ module.exports = (robot) ->
 
       event = _event.payload
       buildName = "#{event.repository.owner_name}/#{event.repository.name}##{event.number}"
-      buildInfo = "#{event.branch} - #{event.commit.slice 0, 7} : #{event.committer_name}"
+      if event.pull_request
+        buildInfo = "PR ##{event.pull_request_number} (\"#{event.pull_request_title}\")"
+      else:
+        buildInfo = event.branch
+      buildInfo += " - #{event.commit.slice 0, 7} : #{event.committer_name}"
 
       robot.messageRoom room, "#{buildName} (#{buildInfo}): The build passed."
 
@@ -49,7 +53,11 @@ module.exports = (robot) ->
       fs.writeFile(fs.mkdtempSync('/tmp/') + '/webhook-failure.json', JSON.stringify(_event), {mode: 0o700})
       event = _event.payload
       buildName = "#{event.repository.owner_name}/#{event.repository.name}##{event.number}"
-      buildInfo = "#{event.branch} - #{event.commit.slice 0, 7} : #{event.committer_name}"
+      if event.pull_request
+        buildInfo = "PR ##{event.pull_request_number} (\"#{event.pull_request_title}\")"
+      else:
+        buildInfo = event.branch
+      buildInfo += " - #{event.commit.slice 0, 7} : #{event.committer_name}"
 
       switch event.status_message
         when 'Passed'

@@ -6,7 +6,7 @@
   "description": "A simple helpful robot for the Pumpiverse",
   "dependencies": {
     "concat-stream": "^1.6.0",
-    "git-clone-or-pull": "^2.0.0",
+    "git-clone-or-pull": "^4.0.0",
     "hubot": "^2.17.0",
     "hubot-botsnack": "1.0.0",
     "hubot-bridge": "^1.0.0",

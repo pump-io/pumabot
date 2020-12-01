@@ -16,7 +16,7 @@
     "hubot-github-compare": "^1.1.0",
     "hubot-github-issue-lookup": "^1.0.0",
     "hubot-github-repo-event-notifier": "^1.8.0",
-    "hubot-help": "^0.1.2",
+    "hubot-help": "^1.0.0",
     "hubot-irc": "^0.2.8",
     "hubot-plusplus": "^1.2.0",
     "hubot-pugme": "^0.1.0",
